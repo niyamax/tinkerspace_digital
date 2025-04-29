@@ -1,0 +1,48 @@
+// Tinkerspace coordinates
+const DEFAULT_LAT = 10.0469797;
+const DEFAULT_LONG = 76.3351998;
+
+export async function getCurrentWeather() {
+  try {
+    const response = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${DEFAULT_LAT}&longitude=${DEFAULT_LONG}&current=temperature_2m,precipitation,weather_code&timezone=auto`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Weather data fetch failed');
+    }
+
+    const data = await response.json();
+    
+    // WMO Weather interpretation codes
+    // https://open-meteo.com/en/docs
+    const weatherCode = data.current.weather_code;
+    const isRaining = [
+      51, 53, 55, // Drizzle
+      61, 63, 65, // Rain
+      80, 81, 82, // Rain showers
+      95, 96, 99  // Thunderstorm
+    ].includes(weatherCode);
+
+    // Map weather codes to descriptions
+    const getWeatherDescription = (code) => {
+      if (code >= 95) return 'thunderstorm';
+      if (code >= 80) return 'rain showers';
+      if (code >= 61) return 'rain';
+      if (code >= 51) return 'drizzle';
+      if (code >= 45) return 'foggy';
+      if (code >= 1) return 'partly cloudy';
+      return 'clear sky';
+    };
+
+    return {
+      isRaining,
+      description: getWeatherDescription(weatherCode),
+      temperature: Math.round(data.current.temperature_2m),
+      precipitation: data.current.precipitation
+    };
+  } catch (error) {
+    console.error('Error fetching weather:', error);
+    return null;
+  }
+} 
