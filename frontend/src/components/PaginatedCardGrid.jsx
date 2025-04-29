@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { teamMembers, projectContributor, guard } from '../utils/badgeRoles';
+import RainAnimation from './RainAnimation';
 
 
 
@@ -217,6 +218,8 @@ const content = `${space}${currentTime}${space}•${space}${currentDate}${space}
         background: 'linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
         borderBottom: '1px solid #333',
         animation: 'gradientMove 8s linear infinite',
+        position: 'relative',
+        overflow: 'hidden',
       }}>
         <style>
           {`
@@ -224,11 +227,6 @@ const content = `${space}${currentTime}${space}•${space}${currentDate}${space}
               0% { background-position: 0% 50%; }
               50% { background-position: 100% 50%; }
               100% { background-position: 0% 50%; }
-            }
-            @keyframes glow {
-              0% { text-shadow: 0 0 5px #ff3b30, 0 0 10px #ff3b30; }
-              50% { text-shadow: 0 0 20px #ff3b30, 0 0 30px #ff3b30; }
-              100% { text-shadow: 0 0 5px #ff3b30, 0 0 10px #ff3b30; }
             }
             @keyframes marquee {
               0% { transform: translateX(0%); }
@@ -243,19 +241,21 @@ const content = `${space}${currentTime}${space}•${space}${currentDate}${space}
             }
           `}
         </style>
+        <RainAnimation />
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           width: '100%',
           gap: '12px',
+          position: 'relative',
+          zIndex: 1,
         }}>
           <div style={{
             color: '#ff3b30',
             fontSize: '32px',
             fontWeight: '700',
             letterSpacing: '2px',
-            animation: 'glow 2s ease-in-out infinite',
           }}>
             LiveFeed
           </div>
