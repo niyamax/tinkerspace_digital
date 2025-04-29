@@ -14,6 +14,33 @@ export async function getCurrentWeather() {
 
     const data = await response.json();
     
+    //Uncomment the below code to test the rain animation
+
+    // const response = {
+    //   "latitude": 10,
+    //   "longitude": 76.375,
+    //   "generationtime_ms": 0.0363588333129883,
+    //   "utc_offset_seconds": 19800,
+    //   "timezone": "Asia/Kolkata",
+    //   "timezone_abbreviation": "GMT+5:30",
+    //   "elevation": 9,
+    //   "current_units": {
+    //     "time": "iso8601",
+    //     "interval": "seconds",
+    //     "temperature_2m": "°C",
+    //     "precipitation": "mm",
+    //     "weather_code": "wmo code"
+    //   },
+    //   "current": {
+    //     "time": "2025-04-29T21:45",
+    //     "interval": 900,
+    //     "temperature_2m": 27.2,
+    //     "precipitation": 120,
+    //     "weather_code": 65
+    //   }
+    // }
+    // const data = response;
+    
     // WMO Weather interpretation codes
     // https://open-meteo.com/en/docs
     const weatherCode = data.current.weather_code;
