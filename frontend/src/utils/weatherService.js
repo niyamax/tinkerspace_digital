@@ -53,12 +53,12 @@ export async function getCurrentWeather() {
 
     // Map weather codes to descriptions
     const getWeatherDescription = (code) => {
-      if (code >= 95) return 'thunderstorm';
-      if (code >= 80) return 'rain showers';
-      if (code >= 61) return 'rain';
-      if (code >= 51) return 'drizzle';
-      if (code >= 45) return 'foggy';
-      if (code >= 1) return 'partly cloudy';
+      if (code >= 95) return 'Thunderstorm';
+      if (code >= 80) return 'Rain Showers';
+      if (code >= 61) return 'Raining';
+      if (code >= 51) return 'Drizzle';
+      if (code >= 45) return 'Foggy';
+      if (code >= 1) return 'Partly Cloudy';
       return 'clear sky';
     };
 

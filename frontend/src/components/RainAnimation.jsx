@@ -3,14 +3,12 @@ import { getCurrentWeather } from '../utils/weatherService';
 
 const RainAnimation = () => {
   const [isRaining, setIsRaining] = useState(false);
-  const [weatherInfo, setWeatherInfo] = useState(null);
 
   useEffect(() => {
     const fetchWeather = async () => {
       const weather = await getCurrentWeather();
       if (weather) {
         setIsRaining(weather.isRaining);
-        setWeatherInfo(weather);
       }
     };
 
@@ -76,22 +74,8 @@ const RainAnimation = () => {
             pointer-events: none;
             border-radius: 50%;
           }
-          .weather-info {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            color: #93B7BE;
-            font-size: 12px;
-            opacity: 0.8;
-          }
         `}
       </style>
-      {weatherInfo && (
-        <div className="weather-info">
-          {weatherInfo.description} • {weatherInfo.temperature}°C
-          {weatherInfo.precipitation > 0 && ` • ${weatherInfo.precipitation}mm/h`}
-        </div>
-      )}
       {Array.from({ length: 50 }).map((_, i) => (
         <React.Fragment key={i}>
           <div
@@ -102,7 +86,6 @@ const RainAnimation = () => {
               opacity: 0,
             }}
           />
-          {/* Splash particles */}
           {Array.from({ length: 3 }).map((_, j) => {
             const angle = (j * 120 + Math.random() * 30) * (Math.PI / 180);
             const distance = 10 + Math.random() * 5;

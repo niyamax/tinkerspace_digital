@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { teamMembers, projectContributor, guard } from '../utils/badgeRoles';
 import RainAnimation from './RainAnimation';
-
-
+import { getCurrentWeather } from '../utils/weatherService';
 
 function useGridLayout(cardWidth, cardHeight, gap) {
   const [layout, setLayout] = useState({ cols: 7, rows: 3 });
@@ -167,6 +166,20 @@ export default function PaginatedCardGrid({ data }) {
   const totalPages = Math.ceil(data.length / cardsPerPage);
   const [page, setPage] = useState(0);
   const intervalRef = useRef();
+  const [weatherInfo, setWeatherInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      const weather = await getCurrentWeather();
+      if (weather) {
+        setWeatherInfo(weather);
+      }
+    };
+
+    fetchWeather();
+    const weatherInterval = setInterval(fetchWeather, 5 * 60 * 1000);
+    return () => clearInterval(weatherInterval);
+  }, []);
 
   useEffect(() => {
     setPage(0);
@@ -179,11 +192,6 @@ export default function PaginatedCardGrid({ data }) {
     return () => clearInterval(intervalRef.current);
   }, [totalPages]);
 
-  const start = page * cardsPerPage;
-  const end = start + cardsPerPage;
-  const pageCards = data.slice(start, end);
-  const emptySlots = cardsPerPage - pageCards.length;
-
   const currentTime = new Date().toLocaleTimeString('en-US', { 
     hour: 'numeric',
     minute: '2-digit',
@@ -195,9 +203,13 @@ export default function PaginatedCardGrid({ data }) {
     year: '2-digit'
   }).replace(/\//g, '/');
 
-const space = '\u00A0\u00A0\u00A0\u00A0\u00A0'; // 5 non-breaking spaces
-const content = `${space}${currentTime}${space}•${space}${currentDate}${space}•${space}${data.length} Makers${space}•`;
+  const space = '\u00A0\u00A0\u00A0\u00A0\u00A0'; // 5 non-breaking spaces
+  const content = `${space}•${space}${currentTime}${space}•${space}${currentDate}${space}•${space}${data.length} Makers${space}•${space}${weatherInfo ? `${weatherInfo.description}${space}•${space}${weatherInfo.temperature}°C` : ''}`;
 
+  const start = page * cardsPerPage;
+  const end = start + cardsPerPage;
+  const pageCards = data.slice(start, end);
+  const emptySlots = cardsPerPage - pageCards.length;
 
   return (
     <div style={{
@@ -267,7 +279,7 @@ const content = `${space}${currentTime}${space}•${space}${currentDate}${space}
             position: 'relative',
           }}>
             <div style={{
-              display: 'inline-flex',  // flex not block
+              display: 'inline-flex',
               animation: 'marquee 80s linear infinite',
             }}>
               <div style={{
@@ -289,7 +301,6 @@ const content = `${space}${currentTime}${space}•${space}${currentDate}${space}
             </div>
           </div>
           {/* Marquee Ends */}
-
         </div>
       </div>
 
